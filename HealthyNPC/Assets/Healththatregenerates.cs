@@ -9,6 +9,7 @@ public class Healththatregenerates : MonoBehaviour, IHealth
     private float timer;
     public event Action<float> OnHPPctChanged = delegate { };
     public event Action OnDied = delegate { };
+    public float targetTime = 3.0f;
 
     private void Start()
     {
@@ -30,15 +31,15 @@ public class Healththatregenerates : MonoBehaviour, IHealth
             currentHealth -= amount;
 
             OnHPPctChanged(CurrentHpPct);
-        }
-        if ((currentHealth < 0))
-        {
+            
+            if ((currentHealth < 0))
+            {
 
+            }
+            if (CurrentHpPct <= 0)
+                Die();
         }
-        if (CurrentHpPct <= 0)
-            Die();
     }
-
     private void Die()
     {
         OnDied();
@@ -47,10 +48,22 @@ public class Healththatregenerates : MonoBehaviour, IHealth
 
     private void Update()
     {
-
+        StartTimer();
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            
+            
             TakeDamage(startingHealth / 10);
         }
+    }
+    private void StartTimer()
+    {
+        targetTime -= Time.deltaTime;
+
+            if (targetTime <= 0.0f)
+            {
+                currentHealth = 100;
+                targetTime = 3f;
+            }
     }
 }
